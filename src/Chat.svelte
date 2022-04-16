@@ -39,7 +39,7 @@
     };
 
     // Get Messages
-    db.get('chat')
+    db.get('mangochat')
       .map(match)
       .once(async (data, id) => {
         if (data) {

@@ -3,9 +3,6 @@
   import Deso from "deso-protocol";
   const deso = new Deso();
 
-  let username;
-  let password;
-
   let name;
   let pwd;
 
@@ -38,10 +35,9 @@
 </script>
 
 <label for="username">Username</label>
-<input name="username" bind:value={username} minlength="3" maxlength="16" />
+<input name="username" bind:value={nick} minlength="3" maxlength="16" />
 
-<label for="password">Password</label>
-<input name="password" bind:value={password} type="password" />
+<h1>Hello {nick}</h1>
 
 <button class="login" on:click={promptLogin}>Login</button>
-<!-- <button class="login" on:click={signup}>Sign Up</button> -->
+
