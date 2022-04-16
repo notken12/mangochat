@@ -1,12 +1,15 @@
 <script>
   import Login from "./Login.svelte";
   import ChatMessage from "./ChatMessage.svelte";
+  import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
   import { username, user } from "./user";
   import debounce from "lodash.debounce";
 
   import GUN from "gun";
   const db = GUN();
+
+  let currentRoom;
 
   let newMessage;
   let messages = [];
@@ -80,35 +83,39 @@
 
 <div class="container">
   {#if $username}
-    <main on:scroll={debouncedWatchScroll}>
-      {#each messages as message (message.when)}
-        <ChatMessage {message} sender={$username} />
-      {/each}
+    {#if currentRoom}
+      <main on:scroll={debouncedWatchScroll}>
+        {#each messages as message (message.when)}
+          <ChatMessage {message} sender={$username} />
+        {/each}
 
-      <div class="dummy" bind:this={scrollBottom} />
-    </main>
+        <div class="dummy" bind:this={scrollBottom} />
+      </main>
 
-    <form on:submit|preventDefault={sendMessage}>
-      <input
-        type="text"
-        placeholder="Type a message..."
-        bind:value={newMessage}
-        maxlength="100"
-      />
+      <form on:submit|preventDefault={sendMessage}>
+        <input
+          type="text"
+          placeholder="Type a message..."
+          bind:value={newMessage}
+          maxlength="100"
+        />
 
-      <button type="submit" disabled={!newMessage}>💥</button>
-    </form>
+        <button type="submit" disabled={!newMessage}>💥</button>
+      </form>
 
-    {#if !canAutoScroll}
-      <div class="scroll-button">
-        <button on:click={autoScroll} class:red={unreadMessages}>
-          {#if unreadMessages}
-            💬
-          {/if}
+      {#if !canAutoScroll}
+        <div class="scroll-button">
+          <button on:click={autoScroll} class:red={unreadMessages}>
+            {#if unreadMessages}
+              💬
+            {/if}
 
-          👇
-        </button>
-      </div>
+            👇
+          </button>
+        </div>
+      {/if}
+    {:else}
+      <Rooms />
     {/if}
   {:else}
     <main>
