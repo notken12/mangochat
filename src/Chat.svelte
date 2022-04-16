@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { username, user, roomId } from "./user";
   import debounce from "lodash.debounce";
+  import { pair } from "./user";
 
   import GUN from "gun";
   const db = GUN();
@@ -18,6 +19,10 @@
   let lastScrollTop;
   let canAutoScroll = true;
   let unreadMessages = false;
+
+  // let pairVal;
+
+  // pair.subscribe(v => pairVal = v)
 
   function autoScroll() {
     setTimeout(() => scrollBottom?.scrollIntoView({ behavior: "auto" }), 50);
@@ -76,6 +81,7 @@
 
   async function sendMessage() {
     const secret = await SEA.encrypt(newMessage, "mangochat");
+    // console.log(pubkey)
     const message = user.get("all").set({ what: secret });
     const index = new Date().toISOString();
     db.get("chat_" + currentRoom)

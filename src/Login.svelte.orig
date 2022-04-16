@@ -8,12 +8,20 @@
 
   let wallet;
   let pwd;
-
+<<<<<<< HEAD
+  let nickVal;
+  nick.subscribe((n) => {
+    nickVal = n;
+  });
+  let pwdKey;
+=======
   let nickVal
   nick.subscribe(n => {
     nickVal = n
   })
 
+
+>>>>>>> 0d4e58dec2444278f40d33571c8f3c8c748d1d74
 
   function login(cb) {
     user.auth(wallet, pwd, ({ err }) => {

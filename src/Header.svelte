@@ -14,7 +14,7 @@
     <div class="user-bio">
       <span>Hello <strong>{$nick}</strong></span>
       <img
-        src={`https://avatars.dicebear.com/api/initials/${$username}.svg`}
+        src={`https://avatars.dicebear.com/api/initials/${$nick}.svg`}
         alt="avatar"
       />
     </div>

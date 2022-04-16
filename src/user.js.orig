@@ -1,0 +1,87 @@
+import GUN from "gun";
+import "gun/sea";
+import "gun/axe";
+import { writable } from "svelte/store";
+
+// Database
+export const db = GUN();
+
+// Gun User
+export const user = db.user().recall({ sessionStorage: true });
+window.user = user;
+
+// Current User's username
+<<<<<<< HEAD
+export const username = writable("");
+export const nick = writable("");
+export const roomId = writable(null);
+export const pair = writable(null);
+=======
+export const username = writable('');
+export const nick = writable('');
+export const roomId = writable(null)
+export const pair = writable(null)
+export const pubkey = writable(null)
+>>>>>>> 0d4e58dec2444278f40d33571c8f3c8c748d1d74
+
+let usernameVal;
+username.subscribe((v) => (usernameVal = v));
+
+<<<<<<< HEAD
+user.get("alias").on((v) => username.set(v));
+user.get("nick").on((v) => nick.set(v));
+=======
+db.on('auth', async(event) => {
+    const alias = await user.get('alias'); // username string
+    username.set(alias);
+    const apair = await user.get('pair')
+    if (!apair) {
+      let apair = await SEA.pair()
+      // Save their pair to their user's "pair" property in the db
+      user.get('pair').put(apair)
+      // Upload public key to db
+      db.get('pubkeys').get(username).put(apair.pub)
+      console.log('pair', apair)
+      pair.set(apair)
+    } else {
+      console.log('has saved pair', apair)
+       db.get('pubkeys').get(username).put(apair.pub)
+       pair.set(apair)
+      }
+>>>>>>> 0d4e58dec2444278f40d33571c8f3c8c748d1d74
+
+db.on("auth", async (event) => {
+  const alias = await user.get("alias"); // username string
+  username.set(alias);
+  const apair = await user.get("pair");
+  let pairdata = { pub: apair.pub, epub: apair.epub };
+  if (!apair) {
+    let apair = await SEA.pair();
+    console.log("pair data", pairdata);
+    // Save their pair to their user's "pair" property in the db
+    user.get("pair").put(apair, (res) => {
+      console.log(res);
+
+      db.get("pubkeys")
+        .get(usernameVal)
+        .put(pairdata, (r) => {
+          console.log(r);
+          console.log("pair", apair);
+          pair.set(apair);
+        });
+    });
+  } else {
+    let pairdata = { pub: apair.pub, epub: apair.epub };
+    console.log("pair data", pairdata);
+    console.log(usernameVal);
+    db.get("pubkeys")
+      .get(usernameVal)
+      .put(pairdata, (r) => {
+        console.log(r);
+        pair.set(apair);
+        console.log("has saved pair", apair);
+      });
+  }
+
+  console.log(`signed in as ${alias}`);
+});
