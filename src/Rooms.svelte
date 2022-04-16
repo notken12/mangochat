@@ -9,6 +9,8 @@
   let rooms = [];
   let makingNewRoom = false;
   let newRoomName = "";
+  let addMemberId = "";
+  let newRoomMembers = [];
 
   const key = "mangochat";
   onMount(() => {
@@ -45,9 +47,10 @@
   }
 
   async function createRoom() {
-    const members = [];
+    const members = newRoomMembers;
+    const roomName = Math.random().toString();
 
-    const encId = await SEA.encrypt(newRoomName, key);
+    const encId = await SEA.encrypt(roomName, key);
     // const encId = newRoomName;
     const encMembers = await SEA.encrypt(JSON.stringify(members), key);
     // const encMembers = JSON.stringify(members);
@@ -60,11 +63,21 @@
   function makeNewRoom() {
     makingNewRoom = true;
   }
+
+  function addMember() {
+    newRoomMembers[newRoomMembers.length] = addMemberId;
+  }
 </script>
 
 <div class="rooms-container">
   {#if makingNewRoom}
-    <input bind:value={newRoomName} type="text" placeholder="room name" />
+    <input
+      bind:value={addMemberId}
+      type="text"
+      placeholder="Add someone by wallet address"
+      on:submit={addMember}
+    />
+    <button on:click={addMember}>Add member</button>
     <button on:click={createRoom}>Create room</button>
   {:else}
     <button on:click={makeNewRoom}>Create room</button>
