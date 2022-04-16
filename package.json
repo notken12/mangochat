@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "deso-protocol": "^0.1.5",
-    "gun": "^0.2020.1234",
+    "gun": "^0.2020.1236",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "sirv-cli": "^1.0.0"
