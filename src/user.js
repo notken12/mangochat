@@ -26,6 +26,7 @@ db.on('auth', async(event) => {
     if (!apair) {
       let apair = await SEA.pair()
       user.get('pair').put(apair)
+      db.get('pubkeys').get(username).put(apair.pub)
       console.log('pair', apair)
       pair.set(apair)
     } else {
