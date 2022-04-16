@@ -44,7 +44,7 @@
       .once(async (data, id) => {
         if (data) {
           // Key for end-to-end encryption
-          const key = "#foo";
+          const key = "mangochat";
 
           var message = {
             // transform the data
@@ -68,7 +68,7 @@
   });
 
   async function sendMessage() {
-    const secret = await SEA.encrypt(newMessage, "#foo");
+    const secret = await SEA.encrypt(newMessage, "mangochat");
     const message = user.get("all").set({ what: secret });
     const index = new Date().toISOString();
     db.get("mangochat").get(index).put(message);
