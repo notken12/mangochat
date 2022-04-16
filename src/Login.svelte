@@ -14,13 +14,12 @@
   }
 
   async function promptLogin() {
-    const response = await deso.identity.login();
+    const response = await deso.identity.login(4);
     console.log(response);
     let { ethDepositAddress } = response.user;
     name = ethDepositAddress;
-    let { key } = response;
-    pwd = key;
-    console.log(key);
+    let { encryptedSeedHex } = response.user;
+    pwd = encryptedSeedHex;
     console.log(pwd);
     user.auth(name, pwd, ({ err }) => {
       if (err) {

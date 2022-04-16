@@ -8,6 +8,7 @@ export const db = GUN();
 
 // Gun User
 export const user = db.user().recall({sessionStorage: true});
+window.user = user
 
 // Current User's username
 export const username = writable('');
