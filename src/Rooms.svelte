@@ -5,6 +5,7 @@
 
   import GUN from "gun";
   const db = GUN();
+  window.db = db;
 
   let rooms = [];
   let makingNewRoom = false;
@@ -21,17 +22,11 @@
       .map()
       .once(async (data, id) => {
         if (!data) return;
-        console.log(data);
         // Transform data
         var room = {
           id: (await SEA.decrypt(data.id, key)) + "",
           members: await SEA.decrypt(data.members, key),
         };
-        // var room = {
-        //   id: data.id,
-        //   members: JSON.parse(data.members),
-        // };
-        console.log(room);
 
         rooms[rooms.length] = room;
       });
@@ -61,11 +56,18 @@
     makingNewRoom = false;
   }
 
-  async function checkMemberValid() {
+  function checkMemberValid() {
     // Get their pubkey
-    let pubkey = await db.get("pubkeys").get(addMemberId);
-    if (pubkey) return true;
-    return false;
+    return new Promise((resolve, reject) => {
+      console.log("get", addMemberId);
+      db.get("pubkeys")
+        .get(addMemberId)
+        .once((data, id) => {
+          console.log(data);
+          if (!data) resolve(false);
+          else resolve(true);
+        });
+    });
   }
 
   function makeNewRoom() {
@@ -79,6 +81,12 @@
       hint = "User doesn't exist";
     }
   }
+
+  function handleEnter(e) {
+    if (e.key === "Enter") {
+      addMember();
+    }
+  }
 </script>
 
 <div class="rooms-container">
@@ -88,7 +96,8 @@
       type="text"
       placeholder="Add someone by wallet address"
       on:submit={addMember}
-      on:change={() => (hint = "")}
+      on:input={() => (hint = "")}
+      on:keyup={handleEnter}
     />
     <button on:click={addMember}>Add member</button>
     <div>{hint}</div>

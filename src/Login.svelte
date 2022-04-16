@@ -7,20 +7,16 @@
 
   let wallet;
   let pwd;
-  let nickVal
-  nick.subscribe(n => {
-    nickVal = n
-  })
-  let pwdKey
-  pwd.subscribe(p => {
-    pwdKey = p
-  })
-
+  let nickVal;
+  nick.subscribe((n) => {
+    nickVal = n;
+  });
+  let pwdKey;
 
   function login(cb) {
     user.auth(wallet, pwd, ({ err }) => {
       if (!err) {
-        cb()
+        cb();
       }
     });
   }
@@ -40,7 +36,7 @@
           if (err) {
             alert(err);
           } else {
-            login();
+            login(() => {});
           }
         });
       }
@@ -50,7 +46,7 @@
   function setNick() {
     // db.user(name).set("nick", , (result) => {
     //   let {err} = result
-      
+
     //   console.log(result)
     //   if (!err) {
     //     // TODO: show UI let the user click on a chat room
@@ -58,19 +54,18 @@
     // })
 
     // var auser = db.user(wallet).put({nick: nick});
-    // db.get('users').set(auser, (result) => {  
+    // db.get('users').set(auser, (result) => {
     //   console.log(result)
     // });
-    user.get('nick').put(nickVal, console.log)
+    user.get("nick").put(nickVal, console.log);
   }
 </script>
-
 
 <h1>Hello {$nick}</h1>
 
 <button class="login" on:click={promptLogin}>Login</button>
 
-
 <label for="username">Nickname</label>
-<input name="username" bind:value={$nick} minlength="3" maxlength="16" /> 
+<input name="username" bind:value={$nick} minlength="3" maxlength="16" />
 <button on:click={setNick}>Set nickname</button>
+
