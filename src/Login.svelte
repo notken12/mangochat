@@ -11,6 +11,10 @@
   nick.subscribe(n => {
     nickVal = n
   })
+  let pwdKey
+  pwd.subscribe(p => {
+    pwdKey = p
+  })
 
 
   function login(cb) {
