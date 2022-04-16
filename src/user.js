@@ -13,6 +13,7 @@ window.user = user
 // Current User's username
 export const username = writable('');
 export const nick = writable('');
+export const roomId = writable(null)
 
 user.get('alias').on(v => username.set(v))
 user.get('nick').on(v => nick.set(v))

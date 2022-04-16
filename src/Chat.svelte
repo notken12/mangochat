@@ -3,7 +3,7 @@
   import ChatMessage from "./ChatMessage.svelte";
   import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
-  import { username, user } from "./user";
+  import { username, user, roomId } from "./user";
   import debounce from "lodash.debounce";
 
   import GUN from "gun";
@@ -41,40 +41,46 @@
       "-": 1, // filter in reverse
     };
 
-    // Get Messages
-    db.get("mangochat")
-      .map(match)
-      .once(async (data, id) => {
-        if (data) {
-          // Key for end-to-end encryption
-          const key = "mangochat";
+    roomId.subscribe((id) => {
+      // Get Messages
+      messages = [];
+      currentRoom = id;
+      db.get("chat_" + id)
+        .map(match)
+        .once(async (data, id) => {
+          if (data) {
+            // Key for end-to-end encryption
+            const key = "mangochat";
 
-          var message = {
-            // transform the data
-            who: await db.user(data).get("alias"), // a user might lie who they are! So let the user system detect whose data it is.
-            what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
-            when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
-          };
+            var message = {
+              // transform the data
+              who: await db.user(data).get("alias"), // a user might lie who they are! So let the user system detect whose data it is.
+              what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
+              when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
+            };
 
-          if (message.what) {
-            messages = [...messages.slice(-100), message].sort(
-              (a, b) => a.when - b.when
-            );
-            if (canAutoScroll) {
-              autoScroll();
-            } else {
-              unreadMessages = true;
+            if (message.what) {
+              messages = [...messages.slice(-100), message].sort(
+                (a, b) => a.when - b.when
+              );
+              if (canAutoScroll) {
+                autoScroll();
+              } else {
+                unreadMessages = true;
+              }
             }
           }
-        }
-      });
+        });
+    });
   });
 
   async function sendMessage() {
     const secret = await SEA.encrypt(newMessage, "mangochat");
     const message = user.get("all").set({ what: secret });
     const index = new Date().toISOString();
-    db.get("mangochat").get(index).put(message);
+    db.get("chat_" + currentRoom)
+      .get(index)
+      .put(message);
     newMessage = "";
     canAutoScroll = true;
     autoScroll();
