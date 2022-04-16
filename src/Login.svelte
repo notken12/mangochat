@@ -34,9 +34,8 @@
 </script>
 
 <label for="username">Username</label>
-<input name="username" bind:value={nick} minlength="3" maxlength="16" />
+<!-- <input name="username" bind:value={nick} minlength="3" maxlength="16" /> -->
 
-<h1>Hello {nick}</h1>
+<!-- <h1>Hello {nick}</h1> -->
 
 <button class="login" on:click={promptLogin}>Login</button>
-
