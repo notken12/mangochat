@@ -3,6 +3,7 @@
 
   function signout() {
     user.leave();
+    location.reload();
   }
 </script>
 

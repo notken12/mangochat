@@ -11,6 +11,7 @@
   let newRoomName = "";
   let addMemberId = "";
   let newRoomMembers = [];
+  let hint = "";
 
   const key = "mangochat";
   onMount(() => {
@@ -60,12 +61,23 @@
     makingNewRoom = false;
   }
 
+  async function checkMemberValid() {
+    // Get their pubkey
+    let pubkey = await db.get("pubkeys").get(addMemberId);
+    if (pubkey) return true;
+    return false;
+  }
+
   function makeNewRoom() {
     makingNewRoom = true;
   }
 
-  function addMember() {
-    newRoomMembers[newRoomMembers.length] = addMemberId;
+  async function addMember() {
+    if (await checkMemberValid()) {
+      newRoomMembers[newRoomMembers.length] = addMemberId;
+    } else {
+      hint = "User doesn't exist";
+    }
   }
 </script>
 
@@ -76,8 +88,10 @@
       type="text"
       placeholder="Add someone by wallet address"
       on:submit={addMember}
+      on:change={() => (hint = "")}
     />
     <button on:click={addMember}>Add member</button>
+    <div>{hint}</div>
     <button on:click={createRoom}>Create room</button>
   {:else}
     <button on:click={makeNewRoom}>Create room</button>

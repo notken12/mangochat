@@ -31,7 +31,8 @@ db.on('auth', async(event) => {
       pair.set(apair)
     } else {
       console.log('has saved pair', apair)
-      pair.set(apair)
+       db.get('pubkeys').get(username).put(apair.pub)
+       pair.set(apair)
       }
 
     console.log(`signed in as ${alias}`);
