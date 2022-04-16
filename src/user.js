@@ -12,6 +12,7 @@ window.user = user
 
 // Current User's username
 export const username = writable('');
+export const nick = writable('');
 
 user.get('alias').on(v => username.set(v))
 

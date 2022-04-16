@@ -1,4 +1,8 @@
+
+
+
 <script>
+  import { username, user, nick } from './user';
   export let message;
   export let sender;
 
@@ -14,6 +18,7 @@
   <div class="message-text">
     <p>{message.what}</p>
 
-    <time>{ts.toLocaleTimeString()}</time>
+    <time>{ts.toLocaleTimeString()}by{nick}</time>
   </div>
+
 </div>

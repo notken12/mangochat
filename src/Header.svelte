@@ -1,9 +1,8 @@
 <script>
-  import { username, user } from './user';
+  import { username, user, nick } from './user';
 
   function signout() {
     user.leave();
-    username.set('');
   }
 </script>
 
@@ -12,7 +11,7 @@
   {#if $username}
     <div class="user-bio">
       
-      <span>Hello <strong>{$username}</strong></span>
+      <span>Hello <strong>{$nick}</strong></span>
       <img src={`https://avatars.dicebear.com/api/initials/${$username}.svg`} alt="avatar" /> 
     </div>
 
