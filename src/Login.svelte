@@ -7,6 +7,10 @@
 
   let wallet;
   let pwd;
+  let nickVal
+  nick.subscribe(n => {
+    nickVal = n
+  })
 
 
   function login(cb) {
@@ -49,10 +53,11 @@
     //   }
     // })
 
-    var auser = db.user(wallet).put({nick: nick});
-    db.get('users').set(auser, (result) => {  
-      console.log(result)
-    });
+    // var auser = db.user(wallet).put({nick: nick});
+    // db.get('users').set(auser, (result) => {  
+    //   console.log(result)
+    // });
+    user.get('nick').put(nickVal, console.log)
   }
 </script>
 
@@ -64,3 +69,4 @@
 
 <label for="username">Nickname</label>
 <input name="username" bind:value={$nick} minlength="3" maxlength="16" /> 
+<button on:click={setNick}>Set nickname</button>
