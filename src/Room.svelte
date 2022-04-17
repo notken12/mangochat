@@ -10,10 +10,13 @@
   export let room;
   let usernameVal;
   username.subscribe((v) => (usernameVal = v));
+  let nicksVal;
+  nicks.subscribe((v) => {
+    nicksVal = v;
+    text = getRoomName(room);
+  });
 
-  $: text = (() => {
-    return getRoomName(room);
-  })();
+  $: text = getRoomName(room);
 
   function connectToRoom() {
     roomId.set(room.id);

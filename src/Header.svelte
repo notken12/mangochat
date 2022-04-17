@@ -23,7 +23,7 @@
   {#if $username}
     {#if $roomId}
       <h1>{getRoomName($currentRoom)}</h1>
-    {:else}
+    {:else if $nick}
       <div class="user-bio">
         <span>Hello <strong>{$nick}</strong></span>
         <img

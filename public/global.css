@@ -273,3 +273,15 @@ img {
   font-size: 0.8rem;
   padding: 0.5rem 1rem;
 }
+
+.recipients {
+  transform: translateY(-100%);
+  display: flex;
+  flex-direction: column;
+  background: #333;
+}
+
+.recipients div {
+  display: flex;
+  padding: 8px;
+}

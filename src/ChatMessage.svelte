@@ -14,6 +14,6 @@
   <div class="message-text">
     <p>{message.what}</p>
 
-    <time>{ts.toLocaleTimeString()} by {message.nick}</time>
+    <time>{ts.toLocaleTimeString()} from {message.nick}</time>
   </div>
 </div>

@@ -1,7 +1,6 @@
 <script>
   import { user, nick, username } from "./user";
-  import Deso from "deso-protocol";
-  const deso = new Deso();
+  import { deso } from "./deso";
   import GUN from "gun";
   const db = GUN();
 
@@ -33,8 +32,9 @@
   async function promptLogin() {
     const response = await deso.identity.login(4);
     console.log(response);
-    let { ethDepositAddress } = response.user;
-    wallet = ethDepositAddress;
+    let { key } = response;
+    // Set users username to their Deso pubkey
+    wallet = key;
     let { encryptedSeedHex } = response.user;
     pwd = encryptedSeedHex;
     console.log(wallet);

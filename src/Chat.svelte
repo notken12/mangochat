@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { username, user, roomId, nick, pair } from "./user";
   import debounce from "lodash.debounce";
+  import { deso } from "./deso";
 
   import GUN from "gun";
   const db = GUN();
@@ -139,6 +140,20 @@
     canAutoScroll = true;
     autoScroll();
   }
+
+  async function sendDeso() {
+    const request = {
+      SenderPublicKeyBase58Check: usernameVal,
+      RecipientPublicKeyOrUsername:
+        "BC1YLgBEZJyva6ukzBDLThvzNfBbo9Dd1czquQjy8MJRzUAiUNsBV8X",
+      AmountNanos: 1,
+      MinFeeRateNanosPerKB: 1000,
+    };
+    const response = await deso.wallet.sendDesoRequest(request);
+  }
+
+  let recipientSearch = "";
+  let sendingDeso = false;
 </script>
 
 <div class="container">
@@ -152,16 +167,38 @@
         <div class="dummy" bind:this={scrollBottom} />
       </main>
 
-      <form on:submit|preventDefault={sendMessage}>
-        <input
-          type="text"
-          placeholder="Type a message..."
-          bind:value={newMessage}
-          maxlength="100"
-        />
+      {#if !sendingDeso}
+        <form on:submit|preventDefault={sendMessage}>
+          <button on:click={() => (sendingDeso = true)} type="button"
+            >Send $DESO</button
+          >
 
-        <button type="submit" disabled={!newMessage}>💥</button>
-      </form>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            bind:value={newMessage}
+            maxlength="500"
+          />
+
+          <button type="submit" disabled={!newMessage}>💥</button>
+        </form>
+      {:else}
+        <div class="recipients">
+          {#each currentRoom.members as member}
+            {#if member !== $username}
+              <div>{member}</div>
+            {/if}
+          {/each}
+        </div>
+        <form>
+          <input
+            type="text"
+            placeholder="Recipient"
+            bind:value={recipientSearch}
+            maxlength="100"
+          />
+        </form>
+      {/if}
 
       <!-- {#if !canAutoScroll} -->
       <!--   <div class="scroll-button"> -->

@@ -26,7 +26,7 @@
       .get("adrooms")
       .map()
       .once(async (data, id) => {
-        console.log(data);
+        // console.log(data);
         if (!data) return;
         // Transform data
         var room = {
@@ -43,7 +43,7 @@
       .map()
       .once(async (data, id) => {
         if (already[id]) return;
-        console.log(data, id);
+        // console.log(data, id);
         already[id] = true;
         if (!data) return;
         // Transform data

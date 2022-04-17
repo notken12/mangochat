@@ -33,6 +33,7 @@ export function getRoomName(room) {
       let memNick = nicksVal[mem];
       s += memNick || mem;
       if (memNick === undefined) {
+        console.log("getting nick");
         getNick(mem);
       }
     }
@@ -88,43 +89,44 @@ db.get("nicks")
   .on((v) => nick.set(v));
 
 db.on("auth", async (event) => {
-  const alias = await user.get("alias"); // username string
-  username.set(alias);
-  const apair = await user.get("pair");
-  let pairdata = { pub: apair.pub, epub: apair.epub };
-  if (!apair) {
-    let apair = await SEA.pair();
-    console.log("pair data", pairdata);
-    // Save their pair to their user's "pair" property in the db
-    pair.set(apair);
-    user.get("pair").put(apair, (res) => {
-      console.log(res);
+  user.get("alias").once((v) => {
+    username.set(v);
+  }); // username string
+  user.get("pair").once(async (apair) => {
+    if (!apair) {
+      let apair = await SEA.pair();
+      // Save their pair to their user's "pair" property in the db
+      pair.set(apair);
+      let pairdata = { pub: apair.pub, epub: apair.epub };
+      console.log("pair data", pairdata);
+      user.get("pair").put(apair, (res) => {
+        console.log(res);
 
+        db.get("pubkeys")
+          .get(usernameVal)
+          .put(pairdata, (r) => {
+            console.log(r);
+            console.log("pair", apair);
+            pair.set(apair);
+          });
+      });
+    } else {
+      let pairdata = { pub: apair.pub, epub: apair.epub };
+      console.log("pair data", pairdata);
+      console.log(usernameVal);
+      pair.set(apair);
       db.get("pubkeys")
         .get(usernameVal)
         .put(pairdata, (r) => {
           console.log(r);
-          console.log("pair", apair);
           pair.set(apair);
+          console.log("has saved pair", apair);
         });
-    });
-  } else {
-    let pairdata = { pub: apair.pub, epub: apair.epub };
-    console.log("pair data", pairdata);
-    console.log(usernameVal);
-    pair.set(apair);
-    db.get("pubkeys")
-      .get(usernameVal)
-      .put(pairdata, (r) => {
-        console.log(r);
-        pair.set(apair);
-        console.log("has saved pair", apair);
-      });
-  }
+    }
+  });
 
   user.get("nick").on((v) => nick.set(v));
   db.get("nicks")
     .get(usernameVal)
     .on((v) => nick.set(v));
-  console.log(`signed in as ${alias}`);
 });
