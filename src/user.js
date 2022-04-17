@@ -124,6 +124,7 @@ db.on("auth", async (event) => {
       // Save their pair to their user's "pair" property in the db
       pair.set(apair);
       let pairdata = { pub: apair.pub, epub: apair.epub };
+      console.log("user does not have apair", pairdata);
       // console.log("pair data", pairdata);
       user.get("pair").put(apair, (res) => {
         console.log(res);
@@ -140,6 +141,7 @@ db.on("auth", async (event) => {
       let pairdata = { pub: apair.pub, epub: apair.epub };
       // console.log("pair data", pairdata);
       // console.log(usernameVal);
+      console.log("user does have apair", pairdata);
       pair.set(apair);
       db.get("pubkeys")
         .get(usernameVal)

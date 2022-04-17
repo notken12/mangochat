@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "rollup -c",
+    "build": "concurrently \"rollup -c\" \"node gunserver.js\"",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
+    "start": "concurrently \"sirv public --no-clear\" \"node gunserver.js\"",
     "test": "echo 'no test specified'"
   },
   "devDependencies": {
