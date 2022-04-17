@@ -22,7 +22,11 @@
 </script>
 
 <div class="room" on:click={connectToRoom}>
-  {text}
+  <img
+    src={`https://avatars.dicebear.com/api/initials/${text.split(", ")[0]}.svg`}
+    alt="avatar"
+  />
+  <div>{text}</div>
 </div>
 
 <style>

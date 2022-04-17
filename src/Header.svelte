@@ -19,7 +19,7 @@
 </script>
 
 <header>
-  <h1>🔫💬</h1>
+  <h3>MangoChat</h3>
   {#if $username}
     {#if $roomId}
       <h1>{getRoomName($currentRoom)}</h1>
