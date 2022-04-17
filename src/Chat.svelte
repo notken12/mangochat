@@ -108,7 +108,7 @@
         .get("messages")
         .get(usernameVal)
         .map()
-        .on(async (data, id) => {
+        .once(async (data, id) => {
           if (!data) return;
           let member = await db.user(data).get("alias");
           // Key for end-to-end encryption
