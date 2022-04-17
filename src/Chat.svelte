@@ -146,8 +146,10 @@
 
       user
         .get("adrooms")
-        .map()
+        .get(id)
+        // .map()
         .once(async (data, id) => {
+          if (!data) return;
           var room = {
             id: (await SEA.decrypt(data.id, unsafeKey)) + "",
             members: await SEA.decrypt(data.members, unsafeKey),

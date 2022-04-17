@@ -23,7 +23,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 -->
-
 <script>
   import Room from "./Room.svelte";
   import { onMount } from "svelte";
@@ -106,10 +105,9 @@
     // const encId = newRoomName;
     const encMembers = await SEA.encrypt(JSON.stringify(members), key);
     // const encMembers = JSON.stringify(members);
-    const index = new Date().toISOString();
     const data = { id: encId, members: encMembers };
     const room = user.get("all").set(data);
-    user.get("adrooms").get(index).put(room);
+    user.get("adrooms").get(roomName).put(room);
     for (let member of members) {
       // Add record under each invited members invites
       // Don't add room invite to yourself
@@ -175,7 +173,7 @@
 </script>
 
 <div class="rooms-container">
-  <h2 color='#153a29'>Your wallet address:</h2>
+  <h2 color="#153a29">Your wallet address:</h2>
   <h3>{$username}</h3>
   <button on:click={copyUsername}>Copy</button>
   {#if copied}
