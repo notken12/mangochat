@@ -3,13 +3,13 @@
   import ChatMessage from "./ChatMessage.svelte";
   import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
-  import { username, user, roomId, nick } from "./user";
+  import { username, user, roomId, nick, pair } from "./user";
   import debounce from "lodash.debounce";
-  import { pair } from "./user";
 
   import GUN from "gun";
   const db = GUN();
 
+  let currentRoomId;
   let currentRoom;
 
   let newMessage;
@@ -20,10 +20,17 @@
   let canAutoScroll = true;
   let unreadMessages = false;
   let nickVal;
+
   nick.subscribe((v) => (nickVal = v));
   // let pairVal;
 
-  const key = "mangochat";
+  let usernameVal;
+  username.subscribe((v) => (usernameVal = v));
+
+  let pairVal;
+  pair.subscribe((v) => (pairVal = v));
+
+  const unsafeKey = "mangochat";
   // pair.subscribe(v => pairVal = v)
 
   function autoScroll() {
@@ -51,46 +58,82 @@
     roomId.subscribe((id) => {
       // Get Messages
       messages = [];
-      currentRoom = id;
+      currentRoomId = id;
       if (id === null || id === undefined) return;
+      console.log("my username is", usernameVal);
       db.get("chat_" + id)
-        .map(match)
+        .get("messages")
+        .get(usernameVal)
+        .map()
         .once(async (data, id) => {
           if (data) {
+            let member = await db.user(data).get("alias")
             // Key for end-to-end encryption
+            db.get("pubkeys")
+              .get(member)
+              .once(async (userPair, id) => {
+                let key = await SEA.secret(userPair.epub, pairVal);
+                console.log("my key is", key);
+                console.log("my username is", usernameVal);
+                console.log('received msg')
 
-            var message = {
-              // transform the data
-              who: await db.user(data).get("alias"), // a user might lie who they are! So let the user system detect whose data it is.
-              what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
-              when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
-              nick: (await SEA.decrypt(data.nick, key)) + "",
-            };
+                var message = {
+                  // transform the data
+                  who: member, // a user might lie who they are! So let the user system detect whose data it is.
+                  what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
+                  when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
+                  nick: (await SEA.decrypt(data.nick, key)) + "",
+                };
+                
 
-            if (message.what) {
-              messages = [...messages.slice(-100), message].sort(
-                (a, b) => a.when - b.when
-              );
-              if (canAutoScroll) {
-                autoScroll();
-              } else {
-                unreadMessages = true;
-              }
-            }
+                  messages = [...messages.slice(-100), message].sort(
+                    (a, b) => a.when - b.when
+                  );
+                  if (canAutoScroll) {
+                    autoScroll();
+                  } else {
+                    unreadMessages = true;
+                  }
+              });
           }
+        });
+
+      user
+        .get("arooms")
+        .map()
+        .once(async (data, id) => {
+          var room = {
+            id: (await SEA.decrypt(data.id, unsafeKey)) + "",
+            members: await SEA.decrypt(data.members, unsafeKey),
+          };
+          currentRoom = room;
         });
     });
   });
 
   async function sendMessage() {
-    const secret = await SEA.encrypt(newMessage, key);
-    const encNick = await SEA.encrypt(nickVal, key);
-    // console.log(pubkey)
-    const message = user.get("all").set({ what: secret, nick: encNick });
     const index = new Date().toISOString();
-    db.get("chat_" + currentRoom)
-      .get(index)
-      .put(message);
+    let cachedMsg = newMessage + ''
+    for (let member of currentRoom.members) {
+      // member stands for the members id
+      db.get("pubkeys")
+        .get(member)
+        .once(async (data, id) => {
+          let key = await SEA.secret(data.epub, pairVal);
+          console.log(`key of member ${member} is `, key);
+          console.log(currentRoomId);
+          const secret = await SEA.encrypt(cachedMsg, key);
+          const encNick = await SEA.encrypt(nickVal, key);
+          const message = user.get("all").set({ what: secret, nick: encNick });
+
+          db.get("chat_" + currentRoomId)
+            .get("messages")
+            .get(member)
+            .get(index)
+            .put(message);
+        });
+    }
+
     newMessage = "";
     canAutoScroll = true;
     autoScroll();
@@ -99,7 +142,7 @@
 
 <div class="container">
   {#if $username && $nick !== undefined}
-    {#if currentRoom}
+    {#if currentRoomId}
       <main on:scroll={debouncedWatchScroll}>
         {#each messages as message (message.when)}
           <ChatMessage {message} sender={$username} />

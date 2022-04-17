@@ -47,6 +47,7 @@ db.on("auth", async (event) => {
     let apair = await SEA.pair();
     console.log("pair data", pairdata);
     // Save their pair to their user's "pair" property in the db
+    pair.set(apair)
     user.get("pair").put(apair, (res) => {
       console.log(res);
 
@@ -62,6 +63,7 @@ db.on("auth", async (event) => {
     let pairdata = { pub: apair.pub, epub: apair.epub };
     console.log("pair data", pairdata);
     console.log(usernameVal);
+    pair.set(apair)
     db.get("pubkeys")
       .get(usernameVal)
       .put(pairdata, (r) => {
