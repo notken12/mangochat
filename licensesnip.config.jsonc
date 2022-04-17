@@ -1,0 +1,15 @@
+{
+  "use_gitignore": true,
+  "file_types": {
+    "svelte,html": {
+      "before_block": "<!--",
+      "before_line": "  ",
+      "after_block": "-->"
+    },
+    "css": {
+      "before_block": "/*",
+      "before_line": "  ",
+      "after_block": "*/"
+    }
+  }
+}

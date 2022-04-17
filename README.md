@@ -1,35 +1,44 @@
-# Mango Chat
+# [🥭 Mango Chat](https://www.mangochat.tech/)
 [![Node.js CI](https://github.com/notken12/encr-message/actions/workflows/node.js.yml/badge.svg)](https://github.com/notken12/encr-message/actions/workflows/node.js.yml)
-[![DeSo](https://uploads-ssl.webflow.com/6148aea00f7f90ad88e373a0/6148aea00f7f900364e37426_deso-logo-color.svg)
-[![GUN.js](https://dbdb.io/media/logos/gun.png)
-[![Svelte](https://miro.medium.com/max/700/0*lPloL8w-ZKtjxeB5.png)
 
+<img src="https://uploads-ssl.webflow.com/6148aea00f7f90ad88e373a0/6148aea00f7f900364e37426_deso-logo-color.svg" alt="DeSo">
+<img src="https://dbdb.io/media/logos/gun.png" alt="GUN.js" height="40">
+<img src="https://miro.medium.com/max/700/0*lPloL8w-ZKtjxeB5.png" height="50">
 
-Mango Chat is a decentralized encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0. 
+Chat privately and send money securely with MangoChat. MangoChat is a decentralized and end-to-encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0. 
 
+## [🌍 Live demo](https://www.mangochat.tech/)
 
-## Installation
+Chat with others on a live demo of MangoChat at https://www.mangochat.tech/
 
-Use [git](https://git-scm.com/downloads) to install Mango Chat.
+## 📦 Install MangoChat locally
+
+Use [git](https://git-scm.com/downloads) to install MangoChat.
 
 ```bash
 git clone https://github.com/notken12/encr-message.git
 ```
 
-## Quick Setup
+## 💻 Run MangoChat locally
 
 ```bash
 git clone https://github.com/notken12/encr-message.git
 npm install
 npm run dev
 ```
-## How it works
-Mango Chat uses gun.js to host a decentralized chat application that is capable of sending encrypted messages using gun.js's encryption feature and money transfers in the form of $DESO coin. 
+## 🤔 How it works
+MangoChat uses GUN.js to host a decentralized chat application that is capable of sending encrypted messages using GUN.js's encryption feature and money transfers in the form of $DESO coin. 
 
-## Contributing
+DeSo is used as the sign-in method and for easily transferring cash in the app. 
+
+GUN.js is a decentralized database that uses peers' browsers' storage to store the data. This removes the need of a central authority that stores messages. 
+
+Messages are encrypted using public key encryption, so messages can only be decrypted by their recipients.
+
+## 💞 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-## License
+## 🔑 License
 [MIT](https://choosealicense.com/licenses/mit/)
