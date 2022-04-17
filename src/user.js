@@ -33,7 +33,7 @@ export function getRoomName(room) {
       let memNick = nicksVal[mem];
       s += memNick || mem;
       if (memNick === undefined) {
-        console.log("getting nick");
+        // console.log("getting nick");
         getNick(mem);
       }
     }
@@ -42,6 +42,8 @@ export function getRoomName(room) {
 }
 
 export async function getNick(id) {
+  if (nicksVal[id] !== undefined) return;
+  if (!id) return;
   db.get("nicks")
     .get(id)
     .once(async (data, id) => {
@@ -98,7 +100,7 @@ db.on("auth", async (event) => {
       // Save their pair to their user's "pair" property in the db
       pair.set(apair);
       let pairdata = { pub: apair.pub, epub: apair.epub };
-      console.log("pair data", pairdata);
+      // console.log("pair data", pairdata);
       user.get("pair").put(apair, (res) => {
         console.log(res);
 
@@ -112,8 +114,8 @@ db.on("auth", async (event) => {
       });
     } else {
       let pairdata = { pub: apair.pub, epub: apair.epub };
-      console.log("pair data", pairdata);
-      console.log(usernameVal);
+      // console.log("pair data", pairdata);
+      // console.log(usernameVal);
       pair.set(apair);
       db.get("pubkeys")
         .get(usernameVal)

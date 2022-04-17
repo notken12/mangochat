@@ -3,7 +3,15 @@
   import ChatMessage from "./ChatMessage.svelte";
   import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
-  import { username, user, roomId, nick, pair, getSendDesoMsg } from "./user";
+  import {
+    username,
+    user,
+    roomId,
+    nick,
+    pair,
+    getSendDesoMsg,
+    nicks,
+  } from "./user";
   import debounce from "lodash.debounce";
   import { deso } from "./deso";
 
@@ -22,8 +30,17 @@
   let unreadMessages = false;
   let nickVal;
 
-  nick.subscribe((v) => (nickVal = v));
+  nick.subscribe((v) => {
+    nickVal = v;
+    console.log(nickVal);
+  });
   // let pairVal;
+  let nicksVal;
+
+  nicks.subscribe((v) => {
+    nicksVal = v;
+    console.log(nicksVal);
+  });
 
   let usernameVal;
   username.subscribe((v) => (usernameVal = v));
@@ -61,7 +78,7 @@
       messages = [];
       currentRoomId = id;
       if (id === null || id === undefined) return;
-      console.log("my username is", usernameVal);
+      // console.log("my username is", usernameVal);
       db.get("chat_" + id)
         .get("messages")
         .get(usernameVal)
@@ -74,9 +91,9 @@
               .get(member)
               .once(async (userPair, id) => {
                 let key = await SEA.secret(userPair.epub, pairVal);
-                console.log("my key is", key);
-                console.log("my username is", usernameVal);
-                console.log("received msg");
+                // console.log("my key is", key);
+                // console.log("my username is", usernameVal);
+                // console.log("received msg");
 
                 var message = {
                   // transform the data
@@ -145,6 +162,7 @@
     const index = new Date().toISOString();
     let cachedUsd = transferAmountUsd + 0;
     let cachedDeso = transferAmountDeso + 0;
+    let cachedRecipient = recipient + "";
 
     for (let member of currentRoom.members) {
       // member stands for the members id
@@ -154,7 +172,7 @@
           let key = await SEA.secret(data.epub, pairVal);
           console.log(`key of member ${member} is `, key);
           console.log(currentRoomId);
-          let desoMsg = getSendDesoMsg(recipient, cachedDeso, cachedUsd);
+          let desoMsg = getSendDesoMsg(cachedRecipient, cachedDeso, cachedUsd);
           const secret = await SEA.encrypt(desoMsg, key);
           const encNick = await SEA.encrypt(nickVal, key);
           const message = user.get("all").set({ what: secret, nick: encNick });
@@ -167,6 +185,9 @@
         });
     }
 
+    transferAmountUsd = 0;
+    transferAmountDeso = 0;
+    recipient = null;
     sendingDeso = false;
     canAutoScroll = true;
     autoScroll();
@@ -180,7 +201,7 @@
 
   async function getExchangeRate() {
     const response = await deso.metaData.getExchangeRate();
-    console.log("exchange rates", response);
+    // console.log("exchange rates", response);
     exchangeRate = response.USDCentsPerDeSoExchangeRate;
   }
   getExchangeRate();
@@ -242,7 +263,7 @@
                   class="recipient"
                   class:selected={recipient === member}
                 >
-                  {member}
+                  {$nicks[member] || member}
                 </div>
               {/if}
             {/each}
