@@ -88,10 +88,15 @@ header {
   gap: 16px;
   font-weight: bold;
   transition: background-color 0.3s;
+  color: #153a29 !important;
+}
+
+.room img {
+  height: 48px;
 }
 
 .room:hover {
-  background: #ffffff44;
+  background: #153a2944;
 }
 
 .container {
@@ -157,6 +162,9 @@ input {
   border: none;
   padding: 0 10px;
   margin: 0;
+}
+
+form input {
   height: 100%;
 }
 
@@ -164,7 +172,7 @@ button {
   background-color: #153a29;
   border: none;
   color: white;
-  padding: 15px 32px; 
+  padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -220,7 +228,7 @@ p,
   padding: 10px 20px;
   border-radius: 25px;
   position: relative;
-  color: white;
+  color: #153a29;
   text-align: center;
 }
 
@@ -258,6 +266,7 @@ p,
 
 .msg-body h3 {
   margin: 0;
+  color: white;
 }
 .msg-body p {
   margin: 0;
@@ -284,11 +293,10 @@ time {
 }
 
 img {
-
   border-radius: 50%;
   margin: 2px 5px;
+  height: 36px;
 }
-
 
 .message:last-child {
   margin-bottom: 20px;
@@ -319,6 +327,11 @@ img {
   display: flex;
   flex-direction: column;
   background: #333;
+  color: white;
+}
+
+form div {
+  color: white;
 }
 
 .recipients div {

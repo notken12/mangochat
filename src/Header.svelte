@@ -19,7 +19,11 @@
 </script>
 
 <header>
-  <h3>MangoChat</h3>
+  {#if $username && $roomId}
+    <button on:click={exitRoom}>&lt;- Back</button>
+  {:else}
+    <h3>MangoChat</h3>
+  {/if}
   {#if $username}
     {#if $roomId}
       <h1>{getRoomName($currentRoom)}</h1>
@@ -28,12 +32,11 @@
         <span>Hello <strong>{$nick}</strong></span>
         <img
           src={`https://avatars.dicebear.com/api/initials/${$nick}.svg`}
-          alt="avatar" width="40px" height="40px"
+          alt="avatar"
+          width="36px"
+          height="36px"
         />
       </div>
-    {/if}
-    {#if $roomId}
-      <button on:click={exitRoom}>Back</button>
     {/if}
     <button class="signout-button" on:click={signout}>Sign Out</button>
   {:else}

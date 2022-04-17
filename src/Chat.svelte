@@ -228,7 +228,7 @@
               maxlength="500"
             />
 
-            <button type="submit" disabled={!newMessage}>💥</button>
+            <button type="submit" disabled={!newMessage}>Send</button>
           </form>
         {:else}
           <div class="recipients">
