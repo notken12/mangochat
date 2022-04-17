@@ -23,7 +23,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 -->
-
 <script>
   import { parseSendDesoMsg, username, nicks, getNick } from "./user";
 
@@ -51,7 +50,7 @@
 
   const messageClass = getClass();
 
-  const avatar = `https://avatars.dicebear.com/api/initials/${message.who}.svg`;
+  const avatar = `https://avatars.dicebear.com/api/initials/${message.nick}.svg`;
 
   const ts = new Date(message.when);
 
