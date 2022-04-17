@@ -23,7 +23,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 -->
-
 <script>
   import Login from "./Login.svelte";
   import ChatMessage from "./ChatMessage.svelte";
@@ -164,6 +163,10 @@
       db.get("pubkeys")
         .get(member)
         .once(async (data, id) => {
+          if (!data) {
+            console.log("couldnt get pubkey");
+            return;
+          }
           let key = await SEA.secret(data.epub, pairVal);
           console.log(`key of member ${member} is `, key);
           console.log(currentRoomId);
