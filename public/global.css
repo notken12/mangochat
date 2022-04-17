@@ -161,7 +161,7 @@ main {
 form {
   height: 64px;
   bottom: 0;
-  background-color: rgb(24, 23, 23);
+  background-color: #153a29;
   width: 100%;
   display: flex;
   font-size: 1.5rem;
@@ -357,7 +357,7 @@ img {
 .recipients {
   display: flex;
   flex-direction: column;
-  background: #333;
+  background: #153a29;
   color: white;
 }
 

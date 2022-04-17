@@ -108,38 +108,40 @@
         .get("messages")
         .get(usernameVal)
         .map()
-        .once(async (data, id) => {
-          if (data) {
-            let member = await db.user(data).get("alias");
-            // Key for end-to-end encryption
-            db.get("pubkeys")
-              .get(member)
-              .once(async (userPair, id) => {
-                let key = await SEA.secret(userPair.epub, pairVal);
-                // console.log("my key is", key);
-                // console.log("my username is", usernameVal);
-                // console.log("received msg");
+        .on(async (data, id) => {
+          if (!data) return;
+          let member = await db.user(data).get("alias");
+          // Key for end-to-end encryption
+          db.get("pubkeys")
+            .get(member)
+            .on(async (userPair, id) => {
+              if (!userPair) return;
+              let key = await SEA.secret(userPair.epub, pairVal);
+              // console.log("my key is", key);
+              // console.log("my username is", usernameVal);
+              // console.log("received msg");
 
-                var message = {
-                  // transform the data
-                  who: member, // a user might lie who they are! So let the user system detect whose data it is.
-                  what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
-                  when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
-                  nick: (await SEA.decrypt(data.nick, key)) + "",
-                };
+              var message = {
+                // transform the data
+                who: member, // a user might lie who they are! So let the user system detect whose data it is.
+                what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
+                when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
+                nick: (await SEA.decrypt(data.nick, key)) + "",
+              };
 
-                if (message.what) {
-                  messages = [...messages.slice(-100), message].sort(
-                    (a, b) => a.when - b.when
-                  );
-                }
-                if (canAutoScroll) {
-                  autoScroll();
-                } else {
-                  unreadMessages = true;
-                }
-              });
-          }
+              if (message.what) {
+                // Don't add msg if theres a duplicate
+                if (messages.find((m) => m.when - message.when === 0)) return;
+                messages = [...messages.slice(-100), message].sort(
+                  (a, b) => a.when - b.when
+                );
+              }
+              if (canAutoScroll) {
+                autoScroll();
+              } else {
+                unreadMessages = true;
+              }
+            });
         });
 
       user
