@@ -23,7 +23,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 -->
-
 <script>
   import { user, nick, username } from "./user";
   import { deso } from "./deso";
@@ -111,16 +110,24 @@
 {#if settingNick}
   <label style="font-size: 40px;" class="" for="username">Nickname</label>
   <div style="position:relative; top:40px;">
-  <input size="24" name="username" bind:value={nickToSet} minlength="3" maxlength="16" />
+    <input
+      size="24"
+      name="username"
+      bind:value={nickToSet}
+      minlength="3"
+      maxlength="16"
+    />
   </div>
 
   <div style="position:relative; left:0px; top:100px;">
-  <button class="login" on:click={setNick}>Set nickname</button>
+    <button class="login" on:click={setNick}>Set nickname</button>
   </div>
 {:else}
-  <div><img src="logo.png" alt="logo" width="600" height="600"></div>
+  <div>
+    <img src="logo.png" alt="logo" width="600" height="600" class="logo" />
+  </div>
 
   <div style="position:relative; left:0px; top:-70px;">
-  <button class="login" on:click={promptLogin}>Login</button>
+    <button class="login" on:click={promptLogin}>Login</button>
   </div>
 {/if}
