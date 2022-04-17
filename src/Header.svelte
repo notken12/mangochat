@@ -5,6 +5,10 @@
     user.leave();
     location.reload();
   }
+
+  function exitRoom() {
+    roomId.set(null);
+  }
 </script>
 
 <header>
@@ -18,10 +22,11 @@
         alt="avatar"
       />
     </div>
-
+    {#if $roomId}
+      <button on:click={exitRoom}>Back</button>
+    {/if}
     <button class="signout-button" on:click={signout}>Sign Out</button>
   {:else}
     <h3>Gun.js Chat</h3>
   {/if}
 </header>
-

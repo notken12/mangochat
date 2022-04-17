@@ -12,9 +12,10 @@ window.user = user;
 
 // Current User's username
 export const username = writable("");
-export const nick = writable("");
+export const nick = writable(undefined);
 export const roomId = writable(null);
 export const pair = writable(null);
+export const nicks = writable({});
 
 let usernameVal;
 username.subscribe((v) => (usernameVal = v));

@@ -5,15 +5,19 @@
   import GUN from "gun";
   const db = GUN();
 
-
   let wallet;
   let pwd;
+  let settingNick = false;
+  let nickToSet = "";
 
-  let nickVal
-  nick.subscribe(n => {
-    nickVal = n
-  })
+  let nickVal;
+  nick.subscribe((n) => {
+    nickVal = n;
+  });
 
+  if (!nickVal) {
+    settingNick = true;
+  }
 
   function login(cb) {
     user.auth(wallet, pwd, ({ err }) => {
@@ -38,9 +42,17 @@
           if (err) {
             alert(err);
           } else {
-            login(() => {});
+            login(() => {
+              if (nickVal === undefined) {
+                settingNick = true;
+              }
+            });
           }
         });
+      } else {
+        if (nickVal === undefined) {
+          settingNick = true;
+        }
       }
     });
   }
@@ -59,15 +71,17 @@
     // db.get('users').set(auser, (result) => {
     //   console.log(result)
     // });
-    user.get("nick").put(nickVal, console.log);
+    user.get("nick").put(nickToSet, console.log);
+    nick.set(nickToSet);
   }
 </script>
 
-<h1>Hello {$nick}</h1>
+<!-- <h1>Hello {$nick || $username}</h1> -->
 
-<button class="login" on:click={promptLogin}>Login</button>
-
-<label for="username">Nickname</label>
-<input name="username" bind:value={$nick} minlength="3" maxlength="16" />
-<button on:click={setNick}>Set nickname</button>
-
+{#if settingNick}
+  <label for="username">Nickname</label>
+  <input name="username" bind:value={nickToSet} minlength="3" maxlength="16" />
+  <button on:click={setNick}>Set nickname</button>
+{:else}
+  <button class="login" on:click={promptLogin}>Login</button>
+{/if}

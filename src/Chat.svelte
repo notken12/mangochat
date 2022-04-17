@@ -3,7 +3,7 @@
   import ChatMessage from "./ChatMessage.svelte";
   import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
-  import { username, user, roomId } from "./user";
+  import { username, user, roomId, nick } from "./user";
   import debounce from "lodash.debounce";
   import { pair } from "./user";
 
@@ -19,9 +19,11 @@
   let lastScrollTop;
   let canAutoScroll = true;
   let unreadMessages = false;
-
+  let nickVal;
+  nick.subscribe((v) => (nickVal = v));
   // let pairVal;
 
+  const key = "mangochat";
   // pair.subscribe(v => pairVal = v)
 
   function autoScroll() {
@@ -50,18 +52,19 @@
       // Get Messages
       messages = [];
       currentRoom = id;
+      if (id === null || id === undefined) return;
       db.get("chat_" + id)
         .map(match)
         .once(async (data, id) => {
           if (data) {
             // Key for end-to-end encryption
-            const key = "mangochat";
 
             var message = {
               // transform the data
               who: await db.user(data).get("alias"), // a user might lie who they are! So let the user system detect whose data it is.
               what: (await SEA.decrypt(data.what, key)) + "", // force decrypt as text.
               when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
+              nick: (await SEA.decrypt(data.nick, key)) + "",
             };
 
             if (message.what) {
@@ -80,9 +83,10 @@
   });
 
   async function sendMessage() {
-    const secret = await SEA.encrypt(newMessage, "mangochat");
+    const secret = await SEA.encrypt(newMessage, key);
+    const encNick = await SEA.encrypt(nickVal, key);
     // console.log(pubkey)
-    const message = user.get("all").set({ what: secret });
+    const message = user.get("all").set({ what: secret, nick: encNick });
     const index = new Date().toISOString();
     db.get("chat_" + currentRoom)
       .get(index)
@@ -94,7 +98,7 @@
 </script>
 
 <div class="container">
-  {#if $username}
+  {#if $username && $nick !== undefined}
     {#if currentRoom}
       <main on:scroll={debouncedWatchScroll}>
         {#each messages as message (message.when)}
