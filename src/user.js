@@ -17,6 +17,21 @@ export const roomId = writable(null);
 export const pair = writable(null);
 export const nicks = writable({});
 
+export async function getNick(id) {
+  db.get("nicks")
+    .get(id)
+    .once(async (data, id) => {
+      nicks.update((n) => {
+        if (data === undefined) {
+          n[id] = null;
+        } else {
+          n[id] = data;
+        }
+        return n;
+      });
+    });
+}
+
 let usernameVal;
 username.subscribe((v) => (usernameVal = v));
 

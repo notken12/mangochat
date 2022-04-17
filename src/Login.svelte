@@ -1,5 +1,5 @@
 <script>
-  import { user, nick } from "./user";
+  import { user, nick, username } from "./user";
   import Deso from "deso-protocol";
   const deso = new Deso();
   import GUN from "gun";
@@ -10,12 +10,15 @@
   let settingNick = false;
   let nickToSet = "";
 
+  let usernameVal;
+  username.subscribe((v) => (usernameVal = v));
+
   let nickVal;
   nick.subscribe((n) => {
     nickVal = n;
   });
 
-  if (!nickVal) {
+  if (!nickVal && usernameVal) {
     settingNick = true;
   }
 
@@ -72,6 +75,7 @@
     //   console.log(result)
     // });
     user.get("nick").put(nickToSet, console.log);
+    db.get("nicks").get(usernameVal).put(nickToSet);
     nick.set(nickToSet);
   }
 </script>
