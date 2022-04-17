@@ -19,6 +19,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "concurrently": "^7.1.0",
     "deso-protocol": "^0.1.5",
     "gun": "^0.2020.1236",
     "lodash.debounce": "^4.0.8",
