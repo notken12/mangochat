@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "concurrently \"rollup -c\" \"node gunserver.js\"",
-    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "dev": "concurrently \"rollup -c -w\" \"node gunserver.js\"",
     "start": "concurrently \"sirv public --no-clear\" \"node gunserver.js\"",
     "test": "echo 'no test specified'"
   },
