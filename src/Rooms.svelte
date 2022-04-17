@@ -149,7 +149,7 @@
 </script>
 
 <div class="rooms-container">
-  <h2>Your wallet address:</h2>
+  <h2 color='#153a29'>Your wallet address:</h2>
   <h3>{$username}</h3>
   <button on:click={copyUsername}>Copy</button>
   {#if copied}
