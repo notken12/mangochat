@@ -130,3 +130,15 @@ db.on("auth", async (event) => {
     .get(usernameVal)
     .on((v) => nick.set(v));
 });
+
+const desoMsgHeader = "--- DESO TRANSFER ---\n";
+
+export function getSendDesoMsg(recipient, amountDeso, amountUsd) {
+  return desoMsgHeader + JSON.stringify({ recipient, amountDeso, amountUsd });
+}
+
+export function parseSendDesoMsg(msg) {
+  if (!msg.startsWith(desoMsgHeader)) return false;
+  let json = msg.substring(desoMsgHeader.length, msg.length);
+  return JSON.parse(json);
+}

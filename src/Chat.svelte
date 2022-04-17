@@ -3,7 +3,7 @@
   import ChatMessage from "./ChatMessage.svelte";
   import Rooms from "./Rooms.svelte";
   import { onMount } from "svelte";
-  import { username, user, roomId, nick, pair } from "./user";
+  import { username, user, roomId, nick, pair, getSendDesoMsg } from "./user";
   import debounce from "lodash.debounce";
   import { deso } from "./deso";
 
@@ -142,18 +142,66 @@
   }
 
   async function sendDeso() {
-    const request = {
-      SenderPublicKeyBase58Check: usernameVal,
-      RecipientPublicKeyOrUsername:
-        "BC1YLgBEZJyva6ukzBDLThvzNfBbo9Dd1czquQjy8MJRzUAiUNsBV8X",
-      AmountNanos: 1,
-      MinFeeRateNanosPerKB: 1000,
-    };
-    const response = await deso.wallet.sendDesoRequest(request);
+    const index = new Date().toISOString();
+    let cachedUsd = transferAmountUsd + 0;
+    let cachedDeso = transferAmountDeso + 0;
+
+    for (let member of currentRoom.members) {
+      // member stands for the members id
+      db.get("pubkeys")
+        .get(member)
+        .once(async (data, id) => {
+          let key = await SEA.secret(data.epub, pairVal);
+          console.log(`key of member ${member} is `, key);
+          console.log(currentRoomId);
+          let desoMsg = getSendDesoMsg(recipient, cachedDeso, cachedUsd);
+          const secret = await SEA.encrypt(desoMsg, key);
+          const encNick = await SEA.encrypt(nickVal, key);
+          const message = user.get("all").set({ what: secret, nick: encNick });
+
+          db.get("chat_" + currentRoomId)
+            .get("messages")
+            .get(member)
+            .get(index)
+            .put(message);
+        });
+    }
+
+    sendingDeso = false;
+    canAutoScroll = true;
+    autoScroll();
   }
 
-  let recipientSearch = "";
+  let transferAmountDeso = 0;
+  let transferAmountUsd = 0;
   let sendingDeso = false;
+  let exchangeRate;
+  let recipient = null;
+
+  async function getExchangeRate() {
+    const response = await deso.metaData.getExchangeRate();
+    console.log("exchange rates", response);
+    exchangeRate = response.USDCentsPerDeSoExchangeRate;
+  }
+  getExchangeRate();
+  async function updateConversionDeso() {
+    if (!exchangeRate) {
+      await getExchangeRate();
+      updateConversionDeso();
+      return;
+    }
+    transferAmountUsd = (transferAmountDeso * exchangeRate) / 100;
+  }
+  async function updateConversionUsd() {
+    if (!exchangeRate) {
+      await getExchangeRate();
+      updateConversionUsd();
+      return;
+    }
+    transferAmountDeso = (transferAmountUsd / exchangeRate) * 100;
+  }
+
+  window.deso = deso;
 </script>
 
 <div class="container">
@@ -166,39 +214,67 @@
 
         <div class="dummy" bind:this={scrollBottom} />
       </main>
+      <div class="bottom">
+        {#if !sendingDeso}
+          <form on:submit|preventDefault={sendMessage}>
+            <button on:click={() => (sendingDeso = true)} type="button"
+              >Send $DESO</button
+            >
 
-      {#if !sendingDeso}
-        <form on:submit|preventDefault={sendMessage}>
-          <button on:click={() => (sendingDeso = true)} type="button"
-            >Send $DESO</button
-          >
+            <input
+              type="text"
+              placeholder="Type a message..."
+              bind:value={newMessage}
+              maxlength="500"
+            />
 
-          <input
-            type="text"
-            placeholder="Type a message..."
-            bind:value={newMessage}
-            maxlength="500"
-          />
-
-          <button type="submit" disabled={!newMessage}>💥</button>
-        </form>
-      {:else}
-        <div class="recipients">
-          {#each currentRoom.members as member}
-            {#if member !== $username}
-              <div>{member}</div>
-            {/if}
-          {/each}
-        </div>
-        <form>
-          <input
-            type="text"
-            placeholder="Recipient"
-            bind:value={recipientSearch}
-            maxlength="100"
-          />
-        </form>
-      {/if}
+            <button type="submit" disabled={!newMessage}>💥</button>
+          </form>
+        {:else}
+          <div class="recipients">
+            <h4>Transfer to...</h4>
+            {#each currentRoom.members as member}
+              {#if member !== $username}
+                <div
+                  on:click={() => {
+                    recipient = member;
+                  }}
+                  class="recipient"
+                  class:selected={recipient === member}
+                >
+                  {member}
+                </div>
+              {/if}
+            {/each}
+          </div>
+          <form on:submit|preventDefault={sendDeso}>
+            <button on:click={() => (sendingDeso = false)} type="button"
+              >Cancel</button
+            >
+            <div>$DESO:</div>
+            <input
+              type="number"
+              placeholder="Amount"
+              bind:value={transferAmountDeso}
+              maxlength="100"
+              on:input={updateConversionDeso}
+              step="any"
+            />
+            <div>=$USD</div>
+            <input
+              type="number"
+              placeholder="Amount"
+              bind:value={transferAmountUsd}
+              maxlength="100"
+              on:input={updateConversionUsd}
+              step="any"
+            />
+            <button type="submit" disabled={!transferAmountDeso || !recipient}
+              >Send</button
+            >
+          </form>
+        {/if}
+      </div>
 
       <!-- {#if !canAutoScroll} -->
       <!--   <div class="scroll-button"> -->
