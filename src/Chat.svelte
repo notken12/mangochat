@@ -163,17 +163,17 @@
         <button type="submit" disabled={!newMessage}>💥</button>
       </form>
 
-      {#if !canAutoScroll}
-        <div class="scroll-button">
-          <button on:click={autoScroll} class:red={unreadMessages}>
-            {#if unreadMessages}
-              💬
-            {/if}
-
-            👇
-          </button>
-        </div>
-      {/if}
+      <!-- {#if !canAutoScroll} -->
+      <!--   <div class="scroll-button"> -->
+      <!--     <button on:click={autoScroll} class:red={unreadMessages}> -->
+      <!--       {#if unreadMessages} -->
+      <!--         💬 -->
+      <!--       {/if} -->
+      <!---->
+      <!--       👇 -->
+      <!--     </button> -->
+      <!--   </div> -->
+      <!-- {/if} -->
     {:else}
       <Rooms />
     {/if}
