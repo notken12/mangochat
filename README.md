@@ -1,4 +1,6 @@
 # Mango Chat
+[![Node.js CI](https://github.com/notken12/encr-message/actions/workflows/node.js.yml/badge.svg)](https://github.com/notken12/encr-message/actions/workflows/node.js.yml)
+
 Mango Chat is a decentralized encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0. 
 ## Installation
 
