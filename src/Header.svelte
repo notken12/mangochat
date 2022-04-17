@@ -28,7 +28,7 @@
         <span>Hello <strong>{$nick}</strong></span>
         <img
           src={`https://avatars.dicebear.com/api/initials/${$nick}.svg`}
-          alt="avatar"
+          alt="avatar" width="40px" height="40px"
         />
       </div>
     {/if}

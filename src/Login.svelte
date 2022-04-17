@@ -83,9 +83,18 @@
 <!-- <h1>Hello {$nick || $username}</h1> -->
 
 {#if settingNick}
-  <label for="username">Nickname</label>
-  <input name="username" bind:value={nickToSet} minlength="3" maxlength="16" />
-  <button on:click={setNick}>Set nickname</button>
+  <label style="font-size: 40px;" class="" for="username">Nickname</label>
+  <div style="position:relative; top:40px;">
+  <input size="24" name="username" bind:value={nickToSet} minlength="3" maxlength="16" />
+  </div>
+
+  <div style="position:relative; left:0px; top:100px;">
+  <button class="login" on:click={setNick}>Set nickname</button>
+  </div>
 {:else}
+  <div><img src="logo.png" alt="logo" width="600" height="600"></div>
+
+  <div style="position:relative; left:0px; top:-70px;">
   <button class="login" on:click={promptLogin}>Login</button>
+  </div>
 {/if}
