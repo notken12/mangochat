@@ -1,5 +1,12 @@
 <script>
-  import { username, user, nick, roomId } from "./user";
+  import {
+    username,
+    user,
+    nick,
+    roomId,
+    getRoomName,
+    currentRoom,
+  } from "./user";
 
   function signout() {
     user.leave();
@@ -14,14 +21,17 @@
 <header>
   <h1>🔫💬</h1>
   {#if $username}
-    <h1>{$roomId}</h1>
-    <div class="user-bio">
-      <span>Hello <strong>{$nick}</strong></span>
-      <img
-        src={`https://avatars.dicebear.com/api/initials/${$nick}.svg`}
-        alt="avatar"
-      />
-    </div>
+    {#if $roomId}
+      <h1>{getRoomName($currentRoom)}</h1>
+    {:else}
+      <div class="user-bio">
+        <span>Hello <strong>{$nick}</strong></span>
+        <img
+          src={`https://avatars.dicebear.com/api/initials/${$nick}.svg`}
+          alt="avatar"
+        />
+      </div>
+    {/if}
     {#if $roomId}
       <button on:click={exitRoom}>Back</button>
     {/if}

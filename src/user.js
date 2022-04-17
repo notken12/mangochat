@@ -16,6 +16,29 @@ export const nick = writable(undefined);
 export const roomId = writable(null);
 export const pair = writable(null);
 export const nicks = writable({});
+export const currentRoom = writable(undefined);
+let nicksVal;
+nicks.subscribe((v) => (nicksVal = v));
+window.nicks = nicksVal;
+export function getRoomName(room) {
+  if (room.members) {
+    let s = "";
+    for (let i = 0; i < room.members.length; i++) {
+      let mem = room.members[i];
+      // Don't list yourself
+      if (mem == usernameVal) continue;
+      if (i !== 0 && s !== "") {
+        s += ", ";
+      }
+      let memNick = nicksVal[mem];
+      s += memNick || mem;
+      if (memNick === undefined) {
+        getNick(mem);
+      }
+    }
+    return s;
+  }
+}
 
 export async function getNick(id) {
   db.get("nicks")
@@ -32,11 +55,37 @@ export async function getNick(id) {
     });
 }
 
+export function generateUUID() {
+  // Public Domain/MIT
+  var d = new Date().getTime(); //Timestamp
+  var d2 =
+    (typeof performance !== "undefined" &&
+      performance.now &&
+      performance.now() * 1000) ||
+    0; //Time in microseconds since page-load or 0 if unsupported
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16; //random number between 0 and 16
+    if (d > 0) {
+      //Use timestamp until depleted
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      //Use microseconds since page-load if supported
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 let usernameVal;
 username.subscribe((v) => (usernameVal = v));
 
 user.get("alias").on((v) => username.set(v));
 user.get("nick").on((v) => nick.set(v));
+db.get("nicks")
+  .get(usernameVal)
+  .on((v) => nick.set(v));
 
 db.on("auth", async (event) => {
   const alias = await user.get("alias"); // username string
@@ -47,7 +96,7 @@ db.on("auth", async (event) => {
     let apair = await SEA.pair();
     console.log("pair data", pairdata);
     // Save their pair to their user's "pair" property in the db
-    pair.set(apair)
+    pair.set(apair);
     user.get("pair").put(apair, (res) => {
       console.log(res);
 
@@ -63,7 +112,7 @@ db.on("auth", async (event) => {
     let pairdata = { pub: apair.pub, epub: apair.epub };
     console.log("pair data", pairdata);
     console.log(usernameVal);
-    pair.set(apair)
+    pair.set(apair);
     db.get("pubkeys")
       .get(usernameVal)
       .put(pairdata, (r) => {
@@ -73,5 +122,9 @@ db.on("auth", async (event) => {
       });
   }
 
+  user.get("nick").on((v) => nick.set(v));
+  db.get("nicks")
+    .get(usernameVal)
+    .on((v) => nick.set(v));
   console.log(`signed in as ${alias}`);
 });

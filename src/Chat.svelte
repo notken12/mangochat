@@ -67,7 +67,7 @@
         .map()
         .once(async (data, id) => {
           if (data) {
-            let member = await db.user(data).get("alias")
+            let member = await db.user(data).get("alias");
             // Key for end-to-end encryption
             db.get("pubkeys")
               .get(member)
@@ -75,7 +75,7 @@
                 let key = await SEA.secret(userPair.epub, pairVal);
                 console.log("my key is", key);
                 console.log("my username is", usernameVal);
-                console.log('received msg')
+                console.log("received msg");
 
                 var message = {
                   // transform the data
@@ -84,22 +84,23 @@
                   when: GUN.state.is(data, "what"), // get the internal timestamp for the what property.
                   nick: (await SEA.decrypt(data.nick, key)) + "",
                 };
-                
 
+                if (message.what) {
                   messages = [...messages.slice(-100), message].sort(
                     (a, b) => a.when - b.when
                   );
-                  if (canAutoScroll) {
-                    autoScroll();
-                  } else {
-                    unreadMessages = true;
-                  }
+                }
+                if (canAutoScroll) {
+                  autoScroll();
+                } else {
+                  unreadMessages = true;
+                }
               });
           }
         });
 
       user
-        .get("arooms")
+        .get("adrooms")
         .map()
         .once(async (data, id) => {
           var room = {
@@ -113,7 +114,7 @@
 
   async function sendMessage() {
     const index = new Date().toISOString();
-    let cachedMsg = newMessage + ''
+    let cachedMsg = newMessage + "";
     for (let member of currentRoom.members) {
       // member stands for the members id
       db.get("pubkeys")

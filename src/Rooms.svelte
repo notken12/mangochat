@@ -1,7 +1,7 @@
 <script>
   import Room from "./Room.svelte";
   import { onMount } from "svelte";
-  import { username, user } from "./user";
+  import { username, user, generateUUID } from "./user";
 
   import GUN from "gun";
   const db = GUN();
@@ -17,11 +17,13 @@
   let usernameVal;
   username.subscribe((v) => (usernameVal = v));
 
+  let already = {};
+
   const key = "mangochat";
   onMount(() => {
     // Get saved rooms
     user
-      .get("arooms")
+      .get("adrooms")
       .map()
       .once(async (data, id) => {
         console.log(data);
@@ -31,6 +33,7 @@
           id: (await SEA.decrypt(data.id, key)) + "",
           members: await SEA.decrypt(data.members, key),
         };
+        if (!room.members) return;
 
         rooms[rooms.length] = room;
       });
@@ -39,7 +42,9 @@
       .get(usernameVal)
       .map()
       .once(async (data, id) => {
+        if (already[id]) return;
         console.log(data, id);
+        already[id] = true;
         if (!data) return;
         // Transform data
         var room = {
@@ -47,22 +52,13 @@
           members: await SEA.decrypt(data.members, key),
         };
 
+        if (!room.members) return;
         // Add to user's saved rooms
-        user.get("arooms").get(room.id).put(data);
+        user.get("adrooms").get(room.id).put(data);
         // Delete the room invite
         db.get("roominvites").get(usernameVal).put(null);
       });
   });
-
-  async function sendMessage() {
-    const secret = await SEA.encrypt(newMessage, key);
-    const message = user.get("all").set({ what: secret });
-    const index = new Date().toISOString();
-    db.get("mangochat").get(index).put(message);
-    newMessage = "";
-    canAutoScroll = true;
-    autoScroll();
-  }
 
   function removeDuplicates(array) {
     return [...new Set(array)];
@@ -78,7 +74,7 @@
       hint = "Add some people first!";
       return;
     }
-    const roomName = Math.random().toString();
+    const roomName = generateUUID();
 
     const encId = await SEA.encrypt(roomName, key);
     // const encId = newRoomName;
@@ -87,7 +83,7 @@
     const index = new Date().toISOString();
     const data = { id: encId, members: encMembers };
     const room = user.get("all").set(data);
-    user.get("arooms").get(index).put(room);
+    user.get("adrooms").get(index).put(room);
     for (let member of members) {
       // Add record under each invited members invites
       // Don't add room invite to yourself
@@ -133,9 +129,32 @@
       addMember();
     }
   }
+
+  let copied = false;
+
+  function copyUsername() {
+    /* Get the text field */
+    var copyText = document.createElement("input");
+
+    /* Select the text field */
+    copyText.value = usernameVal;
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+    /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+
+    copied = true;
+  }
 </script>
 
 <div class="rooms-container">
+  <h2>Your wallet address:</h2>
+  <h3>{$username}</h3>
+  <button on:click={copyUsername}>Copy</button>
+  {#if copied}
+    <div>Copied!</div>{/if}
+  <br />
   {#if makingNewRoom}
     <input
       bind:value={addMemberId}
@@ -157,8 +176,10 @@
     </ol>
     <button on:click={createRoom}>Create room</button>
   {:else}
+    <br />
     <button on:click={makeNewRoom}>Create room</button>
   {/if}
+  <h3>Your rooms</h3>
   {#each rooms as room}
     <Room {room} />
   {/each}
