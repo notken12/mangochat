@@ -2,7 +2,7 @@
 [![Node.js CI](https://github.com/notken12/encr-message/actions/workflows/node.js.yml/badge.svg)](https://github.com/notken12/encr-message/actions/workflows/node.js.yml)
 
 <img src="https://uploads-ssl.webflow.com/6148aea00f7f90ad88e373a0/6148aea00f7f900364e37426_deso-logo-color.svg" alt="DeSo">
-<img src="https://dbdb.io/media/logos/gun.png" alt="GUN.js" height="40">
+<img src="https://i.ytimg.com/vi/F1GB8P6_gVo/maxresdefault.jpg" alt="GUN.js" height="40">
 <img src="https://miro.medium.com/max/700/0*lPloL8w-ZKtjxeB5.png" height="50">
 
 Chat privately and send money securely with MangoChat. MangoChat is a decentralized and end-to-encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0. 
