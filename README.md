@@ -5,7 +5,7 @@
 <img src="https://i.ytimg.com/vi/F1GB8P6_gVo/maxresdefault.jpg" alt="GUN.js" height="40">
 <img src="https://miro.medium.com/max/700/0*lPloL8w-ZKtjxeB5.png" height="50">
 
-Chat privately and send money securely with MangoChat. MangoChat is a decentralized and end-to-encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0. 
+Chat privately and send money securely with MangoChat. MangoChat is a decentralized and end-to-encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0 and won the best overall hack award 🥳!
 
 ## [🌍 Live demo](https://www.mangochat.tech/)
 
