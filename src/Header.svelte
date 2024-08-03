@@ -65,7 +65,5 @@
       </div>
     {/if}
     <button class="signout-button" on:click={signout}>Sign Out</button>
-  {:else}
-    <h3>Gun.js Chat</h3>
   {/if}
 </header>
