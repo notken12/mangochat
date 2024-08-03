@@ -1,4 +1,4 @@
-# [🥭 Mango Chat](https://www.mangochat.vercel.app/)
+# [🥭 Mango Chat](https://mangochat.vercel.app/)
 [![Node.js CI](https://github.com/notken12/mangochat/actions/workflows/node.js.yml/badge.svg)](https://github.com/notken12/mangochat/actions/workflows/node.js.yml)
 
 <img src="https://uploads-ssl.webflow.com/6148aea00f7f90ad88e373a0/6148aea00f7f900364e37426_deso-logo-color.svg" alt="DeSo">
@@ -7,9 +7,9 @@
 
 Chat privately and send money securely with MangoChat. MangoChat is a decentralized and end-to-encrypted chat web application that is capable of sending $DESO coin. It was made within 24 hours during HackTJ 9.0 and won the best overall hack award 🥳!
 
-## [🌍 Live demo](https://www.mangochat.vercel.app/)
+## [🌍 Live demo](https://mangochat.vercel.app/)
 
-Chat with others on a live demo of MangoChat at https://www.mangochat.vercel.app
+Chat with others on a live demo of MangoChat at https://mangochat.vercel.app
 
 ## 📦 Install MangoChat locally
 
