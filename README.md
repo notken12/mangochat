@@ -16,13 +16,13 @@ Chat with others on a live demo of MangoChat at https://www.mangochat.tech/
 Use [git](https://git-scm.com/downloads) to install MangoChat.
 
 ```bash
-git clone https://github.com/notken12/encr-message.git
+git clone https://github.com/notken12/mangochat.git
 ```
 
 ## 💻 Run MangoChat locally
 
 ```bash
-git clone https://github.com/notken12/encr-message.git
+git clone https://github.com/notken12/mangochat.git
 npm install
 npm run dev
 ```
